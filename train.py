@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 # Fixed seed so every run produces the same split
 SEED = 437
@@ -26,3 +30,23 @@ for name, part in (("train", X_train), ("test", X_test)):
 	counts = part["room_type"].value_counts().reindex(room_types, fill_value=0)
 	too_few = counts[counts < 2]
 	assert too_few.empty, f"room types with fewer than 2 {name} rows: {too_few.to_dict()}"
+
+# Every predictor except room type is numeric
+numeric_columns = X.columns.drop("room_type")
+
+# One-hot encode room type and scale the numeric columns. Dropping the
+# first room type (entire home/apt) makes it the baseline the others
+# are compared against
+prep = ColumnTransformer([
+	("encode", OneHotEncoder(drop="first"), ["room_type"]),
+	("scale", StandardScaler(), numeric_columns),
+])
+
+# Preprocessing followed by linear regression
+model = Pipeline([
+	("prep", prep),
+	("model", LinearRegression()),
+])
+
+# Train the model; the encoder and scaler learn only from the training rows
+model.fit(X_train, y_train)
