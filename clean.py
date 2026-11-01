@@ -39,7 +39,7 @@ def find_unique_rows(rows):
 	return [r for r in rows if tuple(r[c] for c in columns) not in conflicts]
 
 # Clean the data, write to listings_dirty.csv
-with open("listings.csv", "r", newline="", encoding="utf-8") as infile:
+with open("data/listings.csv", "r", newline="", encoding="utf-8") as infile:
 	reader = csv.DictReader(infile)
 	seen = set()
 
