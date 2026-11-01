@@ -15,7 +15,7 @@ columns = [
 ]
 
 # Define boundary of seattle
-seattle = gp.read_file("seattle.geojson")
+seattle = gp.read_file("data/seattle.geojson")
 seattle = seattle.to_crs("EPSG:4326")
 seattle_boundary = seattle.geometry.union_all()
 
