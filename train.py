@@ -7,6 +7,7 @@ from sklearn.metrics import mean_absolute_error, r2_score, root_mean_squared_err
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+import skops.io as sio
 
 # Fixed seed so every run produces the same split
 SEED = 437
@@ -32,8 +33,9 @@ for name, part in (("train", X_train), ("test", X_test)):
 	too_few = counts[counts < 2]
 	assert too_few.empty, f"room types with fewer than 2 {name} rows: {too_few.to_dict()}"
 
-# Every predictor except room type is numeric
-numeric_columns = X.columns.drop("room_type")
+# Every predictor except room type is numeric. A plain list, since
+# skops (which saves the model below) can't save a pandas Index
+numeric_columns = X.columns.drop("room_type").tolist()
 
 # One-hot encode room type and scale the numeric columns. Dropping the
 # first room type (entire home/apt) makes it the baseline the others
@@ -60,3 +62,7 @@ y_pred = model.predict(X_test)
 print(f"Test R2:   {r2_score(y_test, y_pred):.4f}")
 print(f"Test RMSE: ${root_mean_squared_error(y_test, y_pred):.2f}")
 print(f"Test MAE:  ${mean_absolute_error(y_test, y_pred):.2f}")
+
+# Save the whole pipeline, not just the regression, so the fitted encoder
+# and scaler go with it and the file can predict from raw listing columns
+sio.dump(model, "data/model.skops")
