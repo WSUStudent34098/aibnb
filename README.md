@@ -3,15 +3,12 @@
 ### Keep only relevant columns:
 | Preserved Columns |
 | :---: |
-| neighbourhood |
 | latitude |
 | longitude |
 | room_type |
 | price |
 | minimum_nights |
 | number_of_reviews |
-| calculated_host_listings_count |
-| availability_365 |
 ### Keep any rows that have NO empty values
 This means any row with an empty value in any of the above columns will be removed.
 ### Keep any coordinates greater than 0.001 precision

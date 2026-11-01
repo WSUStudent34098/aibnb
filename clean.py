@@ -6,15 +6,12 @@ import geopandas as gp
 
 # Any column not listed will not be included in the output csv
 columns = [
-	"neighbourhood",
 	"latitude",
 	"longitude",
 	"room_type",
 	"price",
 	"minimum_nights",
 	"number_of_reviews",
-	"calculated_host_listings_count",
-	"availability_365"
 ]
 
 # Define boundary of seattle
