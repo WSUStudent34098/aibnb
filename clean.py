@@ -38,12 +38,12 @@ def find_unique_rows(rows):
 
 	return [r for r in rows if tuple(r[c] for c in columns) not in conflicts]
 
-# Clean the data, write to listings_dirty.csv
+# Clean the data, write to data/listings_clean.csv
 with open("data/listings.csv", "r", newline="", encoding="utf-8") as infile:
 	reader = csv.DictReader(infile)
 	seen = set()
 
-	with open("listings_dirty.csv", "w", newline="", encoding="utf-8") as outfile:
+	with open("data/listings_clean.csv", "w", newline="", encoding="utf-8") as outfile:
 		writer = csv.DictWriter(outfile, fieldnames=columns)
 		writer.writeheader()
 		filtered_rows = [
